@@ -1,0 +1,17 @@
+public class AccountProcessor {
+    
+    @future
+    public static void countContacts(List<Id> accountIds) {
+        List<Account> accountsToUpdate = new List<Account>();
+        
+        // Query for the Accounts and associated Contact records
+        for (Account acc : [SELECT Id, (SELECT Id FROM Contacts) FROM Account WHERE Id IN :accountIds]) {
+            // Update the Number_Of_Contacts__c field with the count of Contact records
+            acc.Number_Of_Contacts__c = acc.Contacts.size();
+            accountsToUpdate.add(acc);
+        }
+        
+        // Update the Account records
+        update accountsToUpdate;
+    }
+}
